@@ -7,6 +7,9 @@
 
 </div>
 
+> [!TIP]
+> **Playing multiplayer-scaled quests solo?** See [MH3U Damage Multiplier](https://github.com/Juan-Pablo-Barrientos/MH3U-Damage-Multiplier), a Cemu graphic pack that multiplies the damage monsters take.
+
 ## Description
 
 A simple open-source HP overlay that I've developed for MH3U and MH3G HD Ver. in Python. This project is a port of another one I previously created called [MH-HP-Overlay-For-3DS-Emulator](https://github.com/Alexander-Lancellott/MH-HP-Overlay-For-3DS-Emulator), but this time it's designed to work with [Cemu](https://github.com/cemu-project/Cemu/releases/tag/v2.2), on their Windows version
