@@ -36,11 +36,12 @@ The overlay finds each monster by the byte pattern `3C F5 C2 8F` followed by 12 
 | `-0x86A` | f32 ×3 | previous-frame position |
 | `-0x83A` | f32 ×3 | spawn or home point |
 | `+0x527` | u8 | the monster's area (game's internal number) |
-| `+0x526` | u8 | the hunter's current area, as tracked by this monster |
+| `+0x526` | u8 | the hunter's current area, as tracked by this monster (confirmed: follows every hunter area change) |
 
 Behaviour observed:
 
 - **Changing area:** when a large monster changes area, it flies up to y ≈ 10000 and waits there. `+0x527` switches to the destination area the moment it takes off.
+- **Walking monsters** (e.g. Barroth) never rise; their position jumps straight into the new area's coordinates and `+0x527` switches at the same moment. Only flyers get the `→` marker.
 - **Small monsters:** they exist only in the hunter's current area. Their entries are reused per area, and while an area loads they briefly hold junk: odd IDs (27, 33, 37, 16128), max HP 0, and position (0,0,0) or NaN. Filter those out.
 - **Coordinates:** each area has its own coordinate space. A monster's position only means something relative to the hunter when both are in the same area.
 
@@ -57,7 +58,7 @@ The monster object starts `0x16EA` before HP. A fixed pointer table near Wii U `
 | object `+0xE95` | u8: location ID (which map) |
 | object `+0xE96` | u8: the hunter's area (game's internal number). `+0xE97` usually holds the same value. |
 
-Location IDs seen: Flooded Forest `3`, Misty Peaks `12`, hub `26`. **Sandy Plains: not read yet.**
+Location IDs seen: Flooded Forest `3`, Misty Peaks `12`, Deserted Island `15`, Sandy Plains `16`, hub `26`.
 
 ## Game area numbers vs the in-game map
 
@@ -71,15 +72,23 @@ The game's internal area number is not always the number shown on the map. Trans
 
 **Misty Peaks (location 12):** game number = map number for 1–9.
 
-**Sandy Plains (location ID unknown)**
+**Deserted Island (location 15)**
+
+| Game | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Map | 1 | 3 | 2 | 7 | 5 | 9 | 11 | 12 | 6 | 8\* | 4 | 10 |
+
+Map 11 and 12 are the underwater areas.
+
+**Sandy Plains (location 16)**
 
 | Game | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Map | 1 | 2 | 3 | 4 | 5 | 8 | 9\* | 10 | 7 | 11 | 6 |
+| Map | 1 | 2 | 3 | 4 | 5 | 8 | 9 | 10 | 7 | 11 | 6 |
 
 \* Deduced as the only remaining number, not visited.
 
-Not mapped yet: Deserted Island, Tundra, Volcano and any other maps.
+Not mapped yet: Tundra, Volcano and any other maps.
 
 ## What this fork changes in the overlay
 
@@ -142,7 +151,6 @@ Fallback idea: per-monster "damage taken" multipliers in the quest data, which w
 
 ## Open items
 
-- Read Sandy Plains' location ID, then add its table to `AREA_LABELS`.
-- Confirm Flooded Forest game 3 → map 4 and Sandy Plains game 7 → map 9.
+- Confirm Flooded Forest game 3 → map 4.
 - Map the remaining locations.
 - Damage multiplier, as above.

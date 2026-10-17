@@ -8,7 +8,7 @@ Offsets relative to the HP field (hp_addr):
   -0x816  size scale (f32 BE)
   -0x87A  position x, y, z (f32 BE, y is up)
   +0x527  area number (u8); switches to the destination as soon as the monster
-          takes off. +0x526 holds the previous area.
+          takes off. +0x526 holds the hunter's current area.
 Small monsters only exist in the hunter's area, so their area is the hunter's.
 """
 from collections import Counter
