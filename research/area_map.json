@@ -1,0 +1,16 @@
+{
+  "_note": "location id (hunter obj +0xE95) -> {game area id (hunter +0xE96 / monster +0x527) -> map label}. '?' = inferred",
+  "3": {
+    "name": "Flooded Forest",
+    "areas": {"1": 1, "2": 3, "3": "4?", "4": 5, "5": 2, "6": 8, "7": 7, "8": 6, "9": 9, "10": 10}
+  },
+  "12": {
+    "name": "Misty Peaks",
+    "areas": {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9}
+  },
+  "unknown-id": {
+    "name": "Sandy Plains",
+    "areas": {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 8, "7": "9?", "8": 10, "9": 7, "10": 11, "11": 6}
+  },
+  "26": {"name": "Hub", "areas": {}}
+}
