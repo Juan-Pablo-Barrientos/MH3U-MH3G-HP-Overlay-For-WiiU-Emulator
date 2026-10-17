@@ -131,26 +131,13 @@ They only read memory; none of them write to the game. Run them with Python 3.13
 | `ppcdis.py` | Disassembles game code from live memory (`pip install capstone`). |
 | `area_map.json` | The area translation tables. |
 
-## Open: 2.5× damage multiplier (for playing scaled quests solo)
+## Damage multiplier
 
-Goal: multiply the hunter's damage by 2.5 as a Cemu patch tied to module checksum `0x9d2f15e5`, which can be switched on or off in Cemu.
+This moved to its own repo, [MH3U-Damage-Multiplier](https://github.com/Juan-Pablo-Barrientos/MH3U-Damage-Multiplier). It's a Cemu graphic pack, and its README documents how a hit reaches HP.
 
-Done so far:
-
-- Game code reaches monster HP through a smaller block inside the monster object, at offset `0x8A`.
-- All 16-bit stores to `0x8A` in the game code were disassembled. None of them is the hit-damage path:
-  - `0x02b112ec`: changes HP by ±1 at a time, like regeneration.
-  - `0x02b18ccc`, `0x02b18d44`, `0x02b18d64`: recompute HP proportionally.
-  - `0x02b1924c`: saves HP and restores the same value.
-  - `0x02d3df2c`, `0x02d3df5c`: a different structure that happens to use the same offset.
-  - `0x02a2a398`: a stack variable.
-
-Next step: in Cemu, open **Debug → View PPC debugger → Breakpoints → Create memory breakpoint (write)** on a monster's HP address (the 4-byte-aligned address). Hit the monster once. The instruction that wrote HP leads back to where damage is calculated.
-
-Fallback idea: per-monster "damage taken" multipliers in the quest data, which would be a data change instead of a code patch. Not located yet.
+One finding from it matters here: the HP the overlay reads (16-bit, `+0x8A` after the pattern) is the low half of a 32-bit int. The game writes that int at `stats+0x8B8`, where `stats` is the pointer at monster object `+0x1BE0`. Max HP is at `stats+0x8BC`.
 
 ## Open items
 
 - Confirm Flooded Forest game 3 → map 4.
 - Map the remaining locations.
-- Damage multiplier, as above.
