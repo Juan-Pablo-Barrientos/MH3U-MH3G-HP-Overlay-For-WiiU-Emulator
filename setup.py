@@ -6,7 +6,7 @@ setup(
     name="MH3U-MH3G-HP-Overlay-For-WiiU-Emulator",
     author="Alexander-Lancellott",
     author_email="alejandrov.lancellotti@gmail.com",
-    version="1.0.1",
+    version="1.1.0",
     packages=find_packages(),
     install_requires=[
         "ahk[binary]==1.8.0",
