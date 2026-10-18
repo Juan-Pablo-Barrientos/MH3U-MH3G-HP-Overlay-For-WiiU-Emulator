@@ -3,7 +3,7 @@
 <div align="center">
 
   [![StaticBadge](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
-  [![App](https://img.shields.io/badge/App-1.1.0-green)](https://github.com/Juan-Pablo-Barrientos/MH3U-MH3G-HP-Overlay-For-WiiU-Emulator)
+  [![App](https://img.shields.io/badge/App-1.1.1-green)](https://github.com/Juan-Pablo-Barrientos/MH3U-MH3G-HP-Overlay-For-WiiU-Emulator)
 
 </div>
 
@@ -30,7 +30,9 @@ You can support me by donating! I’d really appreciate it. But either way, than
 
 Each large monster's line ends with the area it is in, using the number shown on the in-game map, e.g. `Rathian 3500 | Area 5`. While a monster flies to another area, the line shows `→ Area N` with its destination. Monsters that walk between areas switch straight to the new number.
 
-Mapped locations: Deserted Island, Sandy Plains, Flooded Forest, Tundra, Volcano and Misty Peaks. Elsewhere the overlay shows the game's internal area number followed by `?`. Area tracking was tested on MH3U (USA) v32. See [RESEARCH.md](RESEARCH.md) for how it works.
+Mapped locations: Deserted Island, Sandy Plains, Flooded Forest, Tundra, Volcano and Misty Peaks. Elsewhere the overlay shows the game's internal area number followed by `?`.
+
+Area tracking only works on **MH3U (USA) v32**. On other versions (EUR, MH3G, or other updates) no area is shown and the overlay works as before. See [RESEARCH.md](RESEARCH.md) for how it works.
 
 ## Compatibility
 
