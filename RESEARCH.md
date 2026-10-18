@@ -51,24 +51,26 @@ The monster object starts `0x16EA` before HP. A fixed pointer table near Wii U `
 
 | Where | Meaning |
 |---|---|
-| Wii U `0x10547BF0` | Pointer to the hunter object. It is **0 in the hub**, so fall back to searching memory. |
+| Wii U `0x10547BF0` | Pointer to the hunter object. **Not reliable:** it is 0 in the hub, and on Flooded Forest (location 17) it held `0x800000b8`, which is not a readable address. Always be ready to fall back to searching memory. |
 | object `+0x00` | Class identifier `0x1007F1A0`. Only one object in memory has it. |
 | object `+0x40` | f32 ×3: position x, y, z |
 | object `+0x50` | f32 ×3: rotation matrix row. Its x and z components give the facing direction. |
 | object `+0xE95` | u8: location ID (which map) |
 | object `+0xE96` | u8: the hunter's area (game's internal number). `+0xE97` usually holds the same value. |
 
-Location IDs seen: Flooded Forest `3`, Tundra `4`, Volcano `5`, Misty Peaks `12`, Deserted Island `15`, Sandy Plains `16`, hub `26`.
+Location IDs seen: Flooded Forest `3` and `17`, Tundra `4`, Volcano `5`, Misty Peaks `12`, Deserted Island `15`, Sandy Plains `16`, hub `26`.
 
 ## Game area numbers vs the in-game map
 
 The game's internal area number is not always the number shown on the map. Translation tables (game → map), filled in by walking each area. These are also in `research/area_map.json`.
 
-**Flooded Forest (location 3)**
+**Flooded Forest (locations 3 and 17)**
 
 | Game | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Map | 1 | 3 | 4\* | 5 | 2 | 8 | 7 | 6 | 9 | 10 |
+| Map | 1 | 3 | 4 | 5 | 2 | 8 | 7 | 6 | 9 | 10 |
+
+Location 17 was mapped from scratch and matched location 3 exactly. Why one map has two IDs isn't known yet (village vs. Port Tanzia quests is a guess). Other maps may have a second ID too.
 
 **Tundra (location 4)**
 
@@ -107,12 +109,13 @@ Not mapped yet: single-area maps (arena and similar) and any other maps.
 `modules/mh3u_mh3g.py`:
 
 - **Monster data:** large monster results now also carry the area label (a string) and an `is_flying` flag (true when y > 800).
-- **`get_location`:** finds the hunter's location ID through the pointer at `0x10547BF0`. When that pointer is empty, it uses the hunter object found while scanning the memory chunks the overlay already reads (`find_hunter_in_chunk`).
+- **Version check:** areas are only read when Cemu's window title matches `AREA_TRACKING_TITLE` (title ID `00050000-10118300`, update v32). The hunter addresses were only found on that version; on any other version the overlay behaves exactly like v1.0.1.
+- **`get_location`:** finds the hunter's location ID through the pointer at `0x10547BF0`. When that pointer is empty or invalid, it uses the hunter object found while scanning the memory chunks the overlay already reads (`find_hunter_in_chunk`).
 - **`area_label`:** translates a game area number through `AREA_LABELS[location]`. Locations without a table show the raw game number with a `?`.
 
 `overlay.py`:
 
-- Large monster lines end with ` | Area N`, or ` | → Area N` while the monster is flying to it.
+- Large monster lines end with ` | Area N`, or ` | → Area N` while the monster is flying to it. Without a location (other game versions) nothing is added.
 
 Small monsters and the overlay's layout are unchanged.
 
@@ -152,5 +155,5 @@ One finding from it matters here: the HP the overlay reads (16-bit, `+0x8A` afte
 
 ## Open items
 
-- Confirm Flooded Forest game 3 → map 4.
+- Find out why Flooded Forest has two location IDs, and look for second IDs on the other maps.
 - Map the remaining locations.

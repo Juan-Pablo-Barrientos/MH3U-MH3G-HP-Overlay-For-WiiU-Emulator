@@ -19,11 +19,16 @@ state = {"hunter": None}
 def scan():
     while True:
         try:
-            ptr = int.from_bytes(p.read(p.g2h(HUNTER_PTR), 4), "big")
-            h = p.g2h(ptr) if ptr else None
-            if h and p.read(h, 4) == HUNTER_CLASS:
+            h = None
+            try:
+                ptr = int.from_bytes(p.read(p.g2h(HUNTER_PTR), 4), "big")
+                if ptr and p.read(p.g2h(ptr), 4) == HUNTER_CLASS:
+                    h = p.g2h(ptr)
+            except OSError:
+                pass  # the pointer can hold a non-address (seen on Flooded Forest, location 17)
+            if h:
                 state["hunter"] = h
-            # in the hub the pointer is empty: keep the found object while it is still valid,
+            # pointer empty or invalid: keep the found object while it is still valid,
             # since the full-memory fallback is slow
             elif not state["hunter"] or p.read(state["hunter"], 4) != HUNTER_CLASS:
                 state["hunter"] = p.find_hunter()
