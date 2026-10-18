@@ -270,6 +270,8 @@ HUNTER_CLASS = 0x1007F1A0    # vtable of that object
 LOCATION_OFFSET = 0xE95      # u8 location id inside the hunter object
 AREA_LABELS = {
     3: {1: 1, 2: 3, 3: 4, 4: 5, 5: 2, 6: 8, 7: 7, 8: 6, 9: 9, 10: 10},  # Flooded Forest
+    4: {1: 1, 2: 3, 3: 2, 4: 5, 5: 7, 6: 4, 7: 6},  # Tundra
+    5: {1: 2, 2: 1, 3: 3, 4: 5, 5: 6, 6: 4, 7: 7, 8: 8, 9: 10, 10: 9},  # Volcano
     12: {},  # Misty Peaks: ids already match the map
     15: {1: 1, 2: 3, 3: 2, 4: 7, 5: 5, 6: 9, 7: 11, 8: 12, 9: 6, 10: 8, 11: 4, 12: 10},  # Deserted Island
     16: {1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 8, 7: 9, 8: 10, 9: 7, 10: 11, 11: 6},  # Sandy Plains

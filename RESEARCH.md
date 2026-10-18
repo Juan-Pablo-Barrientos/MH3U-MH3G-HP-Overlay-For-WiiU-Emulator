@@ -58,7 +58,7 @@ The monster object starts `0x16EA` before HP. A fixed pointer table near Wii U `
 | object `+0xE95` | u8: location ID (which map) |
 | object `+0xE96` | u8: the hunter's area (game's internal number). `+0xE97` usually holds the same value. |
 
-Location IDs seen: Flooded Forest `3`, Misty Peaks `12`, Deserted Island `15`, Sandy Plains `16`, hub `26`.
+Location IDs seen: Flooded Forest `3`, Tundra `4`, Volcano `5`, Misty Peaks `12`, Deserted Island `15`, Sandy Plains `16`, hub `26`.
 
 ## Game area numbers vs the in-game map
 
@@ -69,6 +69,18 @@ The game's internal area number is not always the number shown on the map. Trans
 | Game | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | Map | 1 | 3 | 4\* | 5 | 2 | 8 | 7 | 6 | 9 | 10 |
+
+**Tundra (location 4)**
+
+| Game | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+| Map | 1 | 3 | 2 | 5 | 7 | 4 | 6 |
+
+**Volcano (location 5)**
+
+| Game | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Map | 2 | 1 | 3 | 5 | 6 | 4 | 7 | 8 | 10 | 9 |
 
 **Misty Peaks (location 12):** game number = map number for 1–9.
 
@@ -88,7 +100,7 @@ Map 11 and 12 are the underwater areas.
 
 \* Deduced as the only remaining number, not visited.
 
-Not mapped yet: Tundra, Volcano and any other maps.
+Not mapped yet: single-area maps (arena and similar) and any other maps.
 
 ## What this fork changes in the overlay
 
@@ -124,9 +136,10 @@ They only read memory; none of them write to the game. Run them with Python 3.13
 | `mh3u_mem.py` | Shared reader: finds Cemu and the memory region, converts addresses, finds monsters and the hunter. |
 | `names.py` | Monster ID → name tables, taken from the overlay. |
 | `myarea.py` | Prints the hunter's area and location ID, and the area the small monsters report. |
-| `areaid.py` | Small always-on-top window showing the game's area number live. |
+| `areaid.py` | Small always-on-top window showing the game's area number live; type the map number + Enter to save it to `area_map.json`. |
 | `radar.py` | Top-down radar: centered on the hunter with a facing arrow, monsters in other areas listed by area. |
 | `huntercheck.py` | The "stand still / walk" memory comparison used to find the hunter's position. |
+| `questlog.py` | Logs hunter and large monster location, area, position and HP until Ctrl+C. |
 | `poslog.py`, `analyze.py` | 2-minute position logger and its summary. |
 | `ppcdis.py` | Disassembles game code from live memory (`pip install capstone`). |
 | `area_map.json` | The area translation tables. |
