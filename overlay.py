@@ -8,7 +8,7 @@ import win32gui
 from ahk import AHK, Position
 from PySide6.QtCore import QTimer, Qt, QThread, Signal, qInstallMessageHandler
 from PySide6.QtGui import QColorConstants
-from modules.mh3u_mh3g import get_data, get_base_address, Monsters
+from modules.mh3u_mh3g import get_data, get_base_address, Monsters, AREA_TRACKING_TITLE
 from modules.config import ConfigOverlay, ConfigLayout, ConfigColors
 from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QSizePolicy
 from modules.utils import (
@@ -30,9 +30,10 @@ from ahk_wmutil import wmutil_extension
 class DataFetcher(QThread):
     data_fetched = Signal(list)
 
-    def __init__(self, pid, base_address, show_small_monsters, running, max_workers):
+    def __init__(self, pid, base_address, show_small_monsters, running, max_workers, track_areas):
         super().__init__()
         self.pid = pid
+        self.track_areas = track_areas
         self.running = running
         self.base_address = base_address
         self.show_small_monsters = show_small_monsters
@@ -40,7 +41,7 @@ class DataFetcher(QThread):
 
     def run(self):
         while True:
-            data = get_data(self.pid, self.base_address, self.show_small_monsters, self.max_workers)
+            data = get_data(self.pid, self.base_address, self.show_small_monsters, self.max_workers, self.track_areas)
             self.data_fetched.emit(data)
             self.msleep(round(ConfigOverlay.hp_update_time * 1000))
 
@@ -51,6 +52,7 @@ class Overlay(QWidget):
         self.is_borderless = False
         self.running = False
         self.is_mh3g = False
+        self.track_areas = False
         self.is_open_window = False
         self.base_address = None
         self.initial_window_state: Position = Position(0, 0, 800, 600)
@@ -186,7 +188,7 @@ class Overlay(QWidget):
 
     def start_data_fetcher(self, labels, label_layouts):
         self.data_fetcher = DataFetcher(
-            self.pid, self.base_address, self.show_small_monsters, self.running, self.max_workers
+            self.pid, self.base_address, self.show_small_monsters, self.running, self.max_workers, self.track_areas
         )
         self.data_fetcher.data_fetched.connect(
             lambda data: self.update_show(data, labels, label_layouts)
@@ -305,7 +307,8 @@ class Overlay(QWidget):
                         text += f" {hp}"
                         if self.show_initial_hp:
                             text += f" | {initial_hp}"
-                        text += f" | {'→ ' if monster[6] else ''}Area {monster[5]}"
+                        if monster[5] is not None:
+                            text += f" | {'→ ' if monster[6] else ''}Area {monster[5]}"
                         label.setText(text)
                         label_layout.addWidget(label)
                     if ConfigOverlay.show_small_monsters:
@@ -336,6 +339,7 @@ class Overlay(QWidget):
             self.process_name = win.process_name
             self.pid = win.pid
             self.is_mh3g = re.search("MH3G", win.title)
+            self.track_areas = bool(re.search(AREA_TRACKING_TITLE, win.title))
             self.resize(self.minimumSizeHint())
             self.is_borderless = monitor.size[0] <= target.width and monitor.size[1] - 1 <= target.height
 
